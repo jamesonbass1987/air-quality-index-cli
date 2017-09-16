@@ -1,0 +1,4 @@
+class AirQualityIndex::LocalAQI
+
+
+end
