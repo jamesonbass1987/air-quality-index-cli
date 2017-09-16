@@ -1,6 +1,6 @@
 class AirQualityIndex::LocalAQI
 
-  attr_accessor :zip_code, :todays_index, :current_location, :current_aqi, :current_ozone, :current_aqi_msg, :current_ozone_msg, :current_aqi_timestamp, :today_aqi, :today_aqi_msg, :tomorrow_aqi, :tomorrow_aqi_msg, :today_ozone, :tomorrow_ozone
+  attr_accessor :zip_code, :todays_index, :current_location_city, :current_location_state, :current_aqi, :current_ozone, :current_health_msg, :current_aqi_msg, :current_ozone_msg, :current_aqi_timestamp, :today_aqi, :today_aqi_msg, :tomorrow_aqi, :tomorrow_aqi_msg, :today_ozone, :tomorrow_ozone
 
   def call
     self.zip_code_grabber
@@ -35,38 +35,57 @@ class AirQualityIndex::LocalAQI
   #scrape AQI webpage based on submitted zip code
 
   def aqi_scraper(zip_code)
-
   @doc = Nokogiri::HTML(open("https://airnow.gov/index.cfm?action=airnow.local_city&zipcode=#{zip_code}"))
-
   end
 
-  def
+  def doc
+    @doc
+  end
+
+  def timestamp
+    timestamp = self.doc.search("td.AQDataSectionTitle").css("small").text.split(" ")
+    timestamp[0].capitalize!
+    timestamp = timestamp.join(" ")
+    timestamp
+  end
 
   #assign scraped information
 
   def local_aqi_index
 
+    # binding.pry
+
     #store location information
-    self.current_location = 'Portland'
+    self.current_location_city = self.doc.search(".ActiveCity").text.strip
+    self.current_location_state = self.doc.search("a.Breadcrumb")[1].text.strip
+
+    # binding.pry
 
     #store current aqi/ozone data
-
     self.current_aqi = '135'
-    self.current_aqi_msg = '(Unhealthy For Sensitive Groups)'
+    self.current_aqi_msg = self.doc.search("td.AQDataPollDetails")[3].text.strip
     self.current_ozone = '13'
-    self.current_ozone_msg = '(Good)'
-    self.current_aqi_timestamp = '10:00 PDT'
+    self.current_ozone_msg = self.doc.search("td.AQDataPollDetails")[1].text.strip
+    self.current_health_msg = self.doc.search("td.HealthMessage")[0].text.strip
+
+
+    #Extract time from site
+    self.current_aqi_timestamp = self.timestamp
+
+    # binding.pry
+
+    self.doc.search("td.HealthMessage")[0].text.strip
 
     #store todays forecast data
-    self.today_aqi = 'Good'
+    self.today_aqi = self.doc.search("td.AQDataPollDetails")[7].text.strip
     self.today_aqi_msg = 'None'
-    self.today_ozone = 'Good'
+    self.today_ozone = self.doc.search("td.AQDataPollDetails")[5].text.strip
 
     #store tomorrows forecast data
 
-    self.tomorrow_aqi = 'Good'
+    self.tomorrow_aqi = self.doc.search("td.AQDataPollDetails")[11].text.strip
     self.tomorrow_aqi_msg = 'None'
-    self.tomorrow_ozone = 'Good'
+    self.tomorrow_ozone = self.doc.search("td.AQDataPollDetails")[9].text.strip
 
     #return self
     self
@@ -78,19 +97,21 @@ class AirQualityIndex::LocalAQI
 
     puts <<-DOC
 
-    Current Conditions in #{local_aqi.current_location} (AQI Observed at #{local_aqi.current_aqi_timestamp}):
+    Current Conditions in #{local_aqi.current_location_city}, #{local_aqi.current_location_state} (#{local_aqi.current_aqi_timestamp}):
 
-    AQI - #{local_aqi.current_aqi} #{local_aqi.current_aqi_msg}
-    Ozone - #{local_aqi.current_ozone} #{local_aqi.current_ozone_msg}
+    AQI - #{local_aqi.current_aqi} (#{local_aqi.current_aqi_msg})
+    Ozone - #{local_aqi.current_ozone} (#{local_aqi.current_ozone_msg})
 
-    Today's Forecast in #{local_aqi.current_location}
+    #{local_aqi.current_health_msg}
+
+    Today's Forecast in #{local_aqi.current_location_city}, #{local_aqi.current_location_state}
 
     AQI - #{local_aqi.today_aqi}
     Ozone - #{local_aqi.today_ozone}
     Health Message - #{local_aqi.today_aqi_msg}
 
 
-    Tomorrow's Forecast in #{local_aqi.current_location}
+    Tomorrow's Forecast in #{local_aqi.current_location_city}, #{local_aqi.current_location_state}
 
     AQI - #{local_aqi.tomorrow_aqi}
     Ozone - #{local_aqi.tomorrow_ozone}
