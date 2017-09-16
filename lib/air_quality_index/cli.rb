@@ -29,8 +29,7 @@ class AirQualityIndex::CLI
       #based on user input, call appropriate class method
 
       if user_input == '1'
-        #AirQualityIndex::LocalAQI
-        puts "Please enter your zip code:"
+        AirQualityIndex::LocalAQI.new.call
       elsif user_input == '2'
         AirQualityIndex::NationwideAQI.new.call
       elsif user_input == '3'
