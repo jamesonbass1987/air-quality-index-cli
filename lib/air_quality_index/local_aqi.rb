@@ -4,6 +4,7 @@ class AirQualityIndex::LocalAQI
 
   def call
     self.zip_code_grabber
+    self.aqi_scraper(self.zip_code)
     self.local_aqi_return(self.local_aqi_index)
   end
 
@@ -30,6 +31,18 @@ class AirQualityIndex::LocalAQI
       user_zip.size == 5 && user_zip.to_i.to_s == user_zip && user_zip != nil
     end
   end
+
+  #scrape AQI webpage based on submitted zip code
+
+  def aqi_scraper(zip_code)
+
+  @doc = Nokogiri::HTML(open("https://airnow.gov/index.cfm?action=airnow.local_city&zipcode=#{zip_code}"))
+
+  end
+
+  def
+
+  #assign scraped information
 
   def local_aqi_index
 
@@ -58,6 +71,8 @@ class AirQualityIndex::LocalAQI
     #return self
     self
   end
+
+  #return output message with scraped information
 
   def local_aqi_return(local_aqi)
 
