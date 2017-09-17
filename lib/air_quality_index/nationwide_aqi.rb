@@ -8,7 +8,6 @@ class AirQualityIndex::NationwideAQI
   end
 
   def todays_rankings_output
-
     puts ""
     puts "Nationwide AQI Rankings for #{self.todays_date.month}/#{self.todays_date.day}/#{self.todays_date.year}"
     puts ""
@@ -31,30 +30,48 @@ class AirQualityIndex::NationwideAQI
     html = AirQualityIndex::Scraper.new.nationwide_aqi_scraper
 
     #store first rank data
-    self.first_city = "Sisters, OR"
-    self.first_index = "198"
-    self.first_message = "Unhealthy"
+    self.first_city = html.search("a.NtnlSummaryCity")[0].text.strip
+    self.first_index = html.search("div.TabbedPanelsContent").children.css("tr td")[1].children.text.strip
+    self.first_message = aqi_message_set(self.first_index)
 
     #store second rank data
-    self.second_city = "The Dalles, OR"
-    self.second_index = "165"
-    self.second_message = "Unhealthy"
+    self.second_city = html.search("a.NtnlSummaryCity")[1].text.strip
+    self.second_index = html.search("div.TabbedPanelsContent").children.css("tr td")[6].children.text.strip
+    self.second_message = aqi_message_set(self.second_index)
 
     #store third rank data
-    self.third_city = "Madras, OR"
-    self.third_index = "159"
-    self.third_message = "Unhealthy"
+    self.third_city = html.search("a.NtnlSummaryCity")[2].text.strip
+    self.third_index = html.search("div.TabbedPanelsContent").children.css("tr td")[11].children.text.strip
+    self.third_message = aqi_message_set(self.third_index)
 
     #store fourth rank data
-    self.fourth_city = "Medford, OR"
-    self.fourth_index = "156"
-    self.fourth_message = "Unhealthy"
+    self.fourth_city = html.search("a.NtnlSummaryCity")[3].text.strip
+    self.fourth_index = html.search("div.TabbedPanelsContent").children.css("tr td")[16].children.text.strip
+    self.fourth_message = aqi_message_set(self.fourth_index)
 
     #store fifth rank data
-    self.fifth_city = "Ashland, OR"
-    self.fifth_index = "153"
-    self.fifth_message = "Unhealthy"
-
+    self.fifth_city = html.search("a.NtnlSummaryCity")[4].text.strip
+    self.fifth_index = html.search("div.TabbedPanelsContent").children.css("tr td")[21].children.text.strip
+    self.fifth_message = aqi_message_set(self.fifth_index)
   end
 
+  #set aqi messages based off of aqi index ranking
+  def aqi_message_set(index)
+    case index.to_i
+      when 0..50
+        "Good"
+      when 51..100
+        "Moderate"
+      when 101..150
+        "Unhealthy For Sensitive Groups"
+      when 151..200
+        "Unhealthy"
+      when 201..300
+        "Very Unhealthy"
+      when 301 - 500
+        "Hazardous"
+      else
+        "You are probably too dead to read this from all of the air pollution"
+    end
+  end
 end
