@@ -47,7 +47,6 @@ class AirQualityIndex::CLI
   end
 
   def return_message
-    puts ""
     puts "Type 'return' to go back to previous menu, or type 'exit'."
     puts ""
   end
