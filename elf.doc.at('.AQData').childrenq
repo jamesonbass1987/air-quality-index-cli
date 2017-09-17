@@ -1,0 +1,122 @@
+=> [1;34m#(Element:0x14aa690 {[0m
+  name = [31m[1;31m"[0m[31mtable[1;31m"[0m[31m[0m,
+  attributes = [
+    [1;34m#(Attr:0x14aa5f0 {[0m name = [31m[1;31m"[0m[31mclass[1;31m"[0m[31m[0m, value = [31m[1;31m"[0m[31mAQData[1;31m"[0m[31m[0m }),
+    [1;34m#(Attr:0x14aa5b4 {[0m name = [31m[1;31m"[0m[31mwidth[1;31m"[0m[31m[0m, value = [31m[1;31m"[0m[31m540[1;31m"[0m[31m[0m })],
+  children = [
+    [1;34m#(Text [0m[31m[1;31m"[0m[31m[1;35m\r[0m[31m[1;35m\n[0m[31m    [1;31m"[0m[31m[0m),
+    [1;34m#(Element:0x14a369c {[0m
+      name = [31m[1;31m"[0m[31mtr[1;31m"[0m[31m[0m,
+      children = [
+        [1;34m#(Text [0m[31m[1;31m"[0m[31m[1;35m\r[0m[31m[1;35m\n[0m[31m        [1;31m"[0m[31m[0m),
+        [1;34m#(Element:0x14a32f0 {[0m
+          name = [31m[1;31m"[0m[31mtd[1;31m"[0m[31m[0m,
+          attributes = [
+            [1;34m#(Attr:0x14a3264 {[0m
+              name = [31m[1;31m"[0m[31mclass[1;31m"[0m[31m[0m,
+              value = [31m[1;31m"[0m[31mResourceLinksHeader[1;31m"[0m[31m[0m
+              })],
+          children = [ [1;34m#(Text [0m[31m[1;31m"[0m[31mLocal Air Quality Resources[1;31m"[0m[31m[0m)]
+          }),
+        [1;34m#(Text [0m[31m[1;31m"[0m[31m[1;35m\r[0m[31m[1;35m\n[0m[31m    [1;31m"[0m[31m[0m)]
+      }),
+    [1;34m#(Text [0m[31m[1;31m"[0m[31m[1;35m\r[0m[31m[1;35m\n[0m[31m    [1;31m"[0m[31m[0m),
+    [1;34m#(Element:0x14a215c {[0m
+      name = [31m[1;31m"[0m[31mtr[1;31m"[0m[31m[0m,
+      children = [
+        [1;34m#(Text [0m[31m[1;31m"[0m[31m[1;35m\r[0m[31m[1;35m\n[0m[31m        [1;31m"[0m[31m[0m),
+        [1;34m#(Element:0x14a1cc0 {[0m
+          name = [31m[1;31m"[0m[31mtd[1;31m"[0m[31m[0m,
+          children = [
+            [1;34m#(Text [0m[31m[1;31m"[0m[31m[1;35m\r[0m[31m[1;35m\n[0m[31m            [1;31m"[0m[31m[0m),
+            [1;34m#(Element:0x14a1360 {[0m
+              name = [31m[1;31m"[0m[31mtable[1;31m"[0m[31m[0m,
+              attributes = [
+                [1;34m#(Attr:0x14a12fc {[0m name = [31m[1;31m"[0m[31mclass[1;31m"[0m[31m[0m, value = [31m[1;31m"[0m[31mAQDataContent[1;31m"[0m[31m[0m }),
+                [1;34m#(Attr:0x14a12d4 {[0m name = [31m[1;31m"[0m[31mwidth[1;31m"[0m[31m[0m, value = [31m[1;31m"[0m[31m540[1;31m"[0m[31m[0m })],
+              children = [
+                [1;34m#(Text [0m[31m[1;31m"[0m[31m[1;35m\r[0m[31m[1;35m\n[0m[31m                [1;31m"[0m[31m[0m),
+                [1;34m#(Element:0x14a06b8 {[0m
+                  name = [31m[1;31m"[0m[31mtr[1;31m"[0m[31m[0m,
+                  children = [
+                    [1;34m#(Text [0m[31m[1;31m"[0m[31m[1;35m\r[0m[31m[1;35m\n[0m[31m                    [1;31m"[0m[31m[0m),
+                    [1;34m#(Element:0x14a0050 {[0m
+                      name = [31m[1;31m"[0m[31mtd[1;31m"[0m[31m[0m,
+                      attributes = [
+                        [1;34m#(Attr:0x14a1d24 {[0m
+                          name = [31m[1;31m"[0m[31mvalign[1;31m"[0m[31m[0m,
+                          value = [31m[1;31m"[0m[31mmiddle[1;31m"[0m[31m[0m
+                          }),
+                        [1;34m#(Attr:0x14a1edc {[0m
+                          name = [31m[1;31m"[0m[31malign[1;31m"[0m[31m[0m,
+                          value = [31m[1;31m"[0m[31mcenter[1;31m"[0m[31m[0m
+                          })],
+                      children = [
+                        [1;34m#(Text [0m[31m[1;31m"[0m[31m[1;35m\r[0m[31m[1;35m\n[0m[31m                        [1;31m"[0m[31m[0m),
+                        [1;34m#(Element:0x149d1c0 {[0m
+                          name = [31m[1;31m"[0m[31mtable[1;31m"[0m[31m[0m,
+                          children = [
+                            [1;34m#(Element:0x149cec8 {[0m
+                              name = [31m[1;31m"[0m[31mtr[1;31m"[0m[31m[0m,
+                              children = [
+                                [1;34m#(Element:0x149cc0c {[0m
+                                  name = [31m[1;31m"[0m[31mtd[1;31m"[0m[31m[0m,
+                                  attributes = [
+                                    [1;34m#(Attr:0x149cb6c {[0m
+                                      name = [31m[1;31m"[0m[31malign[1;31m"[0m[31m[0m,
+                                      value = [31m[1;31m"[0m[31mleft[1;31m"[0m[31m[0m
+                                      })],
+                                  children = [
+                                    [1;34m#(Text [0m[31m[1;31m"[0m[31m[1;35m\r[0m[31m[1;35m\n[0m[31m                        [1;35m\r[0m[31m[1;35m\n[0m[31m                        [1;35m\t[0m[31m[1;31m"[0m[31m[0m),
+                                    [1;34m#(Element:0x149c5a4 {[0m
+                                      name = [31m[1;31m"[0m[31ma[1;31m"[0m[31m[0m,
+                                      attributes = [
+                                        [1;34m#(Attr:0x149c540 {[0m
+                                          name = [31m[1;31m"[0m[31mhref[1;31m"[0m[31m[0m,
+                                          value = [31m[1;31m"[0m[31mhttp://vcapcd.org/[1;31m"[0m[31m[0m
+                                          }),
+                                        [1;34m#(Attr:0x149c52c {[0m
+                                          name = [31m[1;31m"[0m[31mtarget[1;31m"[0m[31m[0m,
+                                          value = [31m[1;31m"[0m[31m_blank[1;31m"[0m[31m[0m
+                                          }),
+                                        [1;34m#(Attr:0x149c518 {[0m
+                                          name = [31m[1;31m"[0m[31mclass[1;31m"[0m[31m[0m,
+                                          value = [31m[1;31m"[0m[31mBreadcrumb[1;31m"[0m[31m[0m
+                                          })],
+                                      children = [ [1;34m#(Text [0m[31m[1;31m"[0m[31mForecast[1;31m"[0m[31m[0m)]
+                                      }),
+                                    [1;34m#(Text [0m[31m[1;31m"[0m[31m [1;35m\r[0m[31m[1;35m\n[0m[31m                            [1;35m\r[0m[31m[1;35m\n[0m[31m                            [1;35m\t[0m[31m| [1;35m\r[0m[31m[1;35m\n[0m[31m                            [1;35m\r[0m[31m[1;35m\n[0m[31m                        [1;35m\t[0m[31m[1;31m"[0m[31m[0m),
+                                    [1;34m#(Element:0x149b8e8 {[0m
+                                      name = [31m[1;31m"[0m[31ma[1;31m"[0m[31m[0m,
+                                      attributes = [
+                                        [1;34m#(Attr:0x149b870 {[0m
+                                          name = [31m[1;31m"[0m[31mhref[1;31m"[0m[31m[0m,
+                                          value = [31m[1;31m"[0m[31mhttp://www.vcapcd.org/forecast/fcst.htm[1;31m"[0m[31m[0m
+                                          }),
+                                        [1;34m#(Attr:0x149b848 {[0m
+                                          name = [31m[1;31m"[0m[31mtarget[1;31m"[0m[31m[0m,
+                                          value = [31m[1;31m"[0m[31m_blank[1;31m"[0m[31m[0m
+                                          }),
+                                        [1;34m#(Attr:0x149b834 {[0m
+                                          name = [31m[1;31m"[0m[31mclass[1;31m"[0m[31m[0m,
+                                          value = [31m[1;31m"[0m[31mBreadcrumb[1;31m"[0m[31m[0m
+                                          })],
+                                      children = [
+                                        [1;34m#(Text [0m[31m[1;31m"[0m[31mToday's AQI Forecast[1;31m"[0m[31m[0m)]
+                                      }),
+                                    [1;34m#(Text [0m[31m[1;31m"[0m[31m [1;35m\r[0m[31m[1;35m\n[0m[31m                            [1;35m\r[0m[31m[1;35m\n[0m[31m                        [1;31m"[0m[31m[0m)]
+                                  })]
+                              })]
+                          }),
+                        [1;34m#(Text [0m[31m[1;31m"[0m[31m[1;35m\r[0m[31m[1;35m\n[0m[31m                    [1;31m"[0m[31m[0m)]
+                      }),
+                    [1;34m#(Text [0m[31m[1;31m"[0m[31m[1;35m\r[0m[31m[1;35m\n[0m[31m                [1;31m"[0m[31m[0m)]
+                  }),
+                [1;34m#(Text [0m[31m[1;31m"[0m[31m[1;35m\r[0m[31m[1;35m\n[0m[31m            [1;31m"[0m[31m[0m)]
+              }),
+            [1;34m#(Text [0m[31m[1;31m"[0m[31m[1;35m\r[0m[31m[1;35m\n[0m[31m        [1;31m"[0m[31m[0m)]
+          }),
+        [1;34m#(Text [0m[31m[1;31m"[0m[31m[1;35m\r[0m[31m[1;35m\n[0m[31m    [1;31m"[0m[31m[0m)]
+      }),
+    [1;34m#(Text [0m[31m[1;31m"[0m[31m[1;35m\r[0m[31m[1;35m\n[0m[31m[1;31m"[0m[31m[0m)]
+  })

@@ -10,6 +10,7 @@ class AirQualityIndex::CLI
 
   def list_options
     puts <<-DOC.gsub /^\s*/, ''
+
     1. Local AQI Information
     2. Top 5 Nationwide AQI Rankings
     3. General AQI Information
@@ -19,9 +20,10 @@ class AirQualityIndex::CLI
 
   def menu
 
-    puts "Please enter 1-3 to make your selection, or type exit."
+    puts "Please enter a numeric selection (1-3), or type exit."
 
     user_input = nil
+
     while user_input != 'exit'
 
       #gets user input
@@ -40,8 +42,6 @@ class AirQualityIndex::CLI
       when 'return'
         self.list_options
         self.menu
-      else
-        puts "Invalid entry. Please enter a numeric selection 1-3, or type 'exit'."
       end
     end
   end
