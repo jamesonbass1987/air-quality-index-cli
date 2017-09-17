@@ -1,16 +1,17 @@
 class AirQualityIndex::NationwideAQI
 
-  attr_reader :todays_date, :national_aqi
+  attr_accessor :todays_date, :national_aqi, :first_city, :first_index, :first_message, :second_city, :second_index, :second_message, :third_city, :third_index, :third_message, :fourth_city, :fourth_index, :fourth_message, :fifth_city, :fifth_index, :fifth_message
 
   def call
-
+    self.get_nationwide_data
     puts self.todays_rankings_output
   end
 
   def todays_rankings_output
 
+    puts ""
     puts "Nationwide AQI Rankings for #{self.todays_date.month}/#{self.todays_date.day}/#{self.todays_date.year}"
-
+    puts ""
     puts <<-DOC
     1. #{self.first_city} - #{self.first_index} (#{self.first_message})
     2. #{self.second_city} - #{self.second_index} (#{self.second_message})
