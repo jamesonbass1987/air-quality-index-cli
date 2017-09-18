@@ -2,9 +2,12 @@ class AirQualityIndex::LocalAQI
 
   attr_accessor :zip_code, :todays_index, :current_location_city, :current_location_state, :current_aqi_index, :current_health_msg, :current_pm, :current_pm_msg, :current_ozone, :current_ozone_msg, :current_aqi_timestamp, :today_aqi, :today_aqi_msg, :today_ozone, :tomorrow_aqi, :tomorrow_aqi_msg, :tomorrow_ozone, :doc
 
-  def call
+  #instantiates new instance based on the Local AQI option in the CLI menu
+  def call_from_zip_code
+
     #grab user's zip code,
     self.zip_code_grabber
+
     #call scraper class method to access html of page based on zip code
     @doc = AirQualityIndex::Scraper.new.local_aqi_scraper(self.zip_code)
 
@@ -12,13 +15,36 @@ class AirQualityIndex::LocalAQI
     self.aqi_info_validation_return(self.doc)
   end
 
-  # grab zip code from user
+  #instantiates new instance from the Nationwide rankings based on user selection
+  def call_from_ranking(link)
+
+    #call scraper class method to access html of page based ranking
+    @doc = AirQualityIndex::Scraper.new.nationwide_scraper_more_info(link)
+
+    #return aqi information for ranked city
+    self.aqi_info_validation_return(self.doc)
+  end
+
+  # grab zip code from user for local aqi instance
   def zip_code_grabber
+
+    puts ''
     puts "Please enter your 5-digit zip code:"
+    puts ''
+
     @zip_code = nil
 
+    # checks for zip code validation utilzing is_zip_code? method
     while !self.is_zip_code?(self.zip_code)
+
       self.zip_code = gets.chomp
+
+      if !self.is_zip_code?(self.zip_code)
+          puts ""
+          puts "I'm sorry. That entry was invalid. Please enter a valid 5 digit zip code."
+          puts ""
+      end
+
     end
 
     #return zip_code
@@ -34,9 +60,9 @@ class AirQualityIndex::LocalAQI
     end
   end
 
+  #check to see if zip code page information is available based on scraped web site data, otherwise proceed with aqi info pull
   def aqi_info_validation_return(html)
 
-    #check to see if zip code page information is available, otherwise proceed with aqi info pull
     page_message = self.doc.search("h2").text.strip
 
     if page_message.include? "does not currently have Air Quality data"
@@ -50,7 +76,7 @@ class AirQualityIndex::LocalAQI
     end
   end
 
-  #grab timestamp of aqi measurement
+  #grabs timestamp of aqi measurement
   def timestamp
     timestamp = self.doc.search("td.AQDataSectionTitle").css("small").text.split(" ")
     timestamp[0].capitalize!
@@ -58,7 +84,7 @@ class AirQualityIndex::LocalAQI
     timestamp
   end
 
-  #assign scraped information
+  #assign scraped information to instance variables
   def local_aqi_index
 
     #Store 'Data Unavailable Message' as variable. Each method below checks for a nil return and sets message if found.
@@ -69,29 +95,24 @@ class AirQualityIndex::LocalAQI
     self.current_location_state = self.doc.search("a.Breadcrumb")[1].text.strip
 
     #store aqi index
-
     self.doc.at('.TblInvisible').css('tr td').children[1].nil?? self.current_aqi_index = unavailable_msg : self.current_aqi_index = self.doc.at('.TblInvisible').css('tr td').children[1].text.strip
     self.doc.search("td.HealthMessage")[0].nil?? self.current_health_msg = unavailable_msg : self.current_health_msg = self.doc.search("td.HealthMessage")[0].text.strip[/(?<=Health Message: ).*/]
 
     #store current aqi/ozone data
-
     self.doc.search("table")[14].children.css("td")[4].nil?? self.current_pm = unavailable_msg : self.current_pm = self.doc.search("table")[14].children.css("td")[4].text.strip
     self.doc.search("td.AQDataPollDetails")[3].nil?? self.current_pm_msg = unavailable_msg : self.current_pm_msg = self.doc.search("td.AQDataPollDetails")[3].text.strip
     self.doc.search("table")[14].children.css("td")[1].nil?? self.current_ozone = unavailable_msg : self.current_ozone =  self.doc.search("table")[14].children.css("td")[1].text.strip
     self.doc.search("td.AQDataPollDetails")[1].nil?? self.current_ozone_msg = unavailable_msg : self.current_ozone_msg = self.doc.search("td.AQDataPollDetails")[1].text.strip
 
-
     #Extract time from site
     self.current_aqi_timestamp = self.timestamp
 
     #store todays forecast data
-
     self.doc.search("td.AQDataPollDetails")[7].nil?? self.today_aqi = unavailable_msg : self.today_aqi = self.doc.search("td.AQDataPollDetails")[7].text.strip
     self.doc.search("td.HealthMessage")[1].nil?? self.today_aqi_msg = unavailable_msg : self.today_aqi_msg = self.doc.search("td.HealthMessage")[1].text.strip[/(?<=Health Message: ).*/]
     self.doc.search("td.AQDataPollDetails")[5].nil?? self.today_ozone = unavailable_msg : self.today_ozone = self.doc.search("td.AQDataPollDetails")[5].text.strip
 
     #store tomorrows forecast data
-
     self.doc.search("td.AQDataPollDetails")[11].nil?? self.tomorrow_aqi = unavailable_msg : self.tomorrow_aqi = self.doc.search("td.AQDataPollDetails")[11].text.strip
     self.doc.search("td.HealthMessage")[2].nil?? self.tomorrow_aqi_msg = unavailable_msg : self.tomorrow_aqi_msg = self.doc.search("td.HealthMessage")[2].text.strip[/(?<=Health Message: ).*/]
     self.doc.search("td.AQDataPollDetails")[9].nil?? self.tomorrow_ozone = unavailable_msg : self.tomorrow_ozone = self.doc.search("td.AQDataPollDetails")[9].text.strip
@@ -124,7 +145,7 @@ class AirQualityIndex::LocalAQI
     AQI: #{self.tomorrow_aqi}
     Ozone: #{self.tomorrow_ozone}
     Health Message: #{self.tomorrow_aqi_msg}
-    
+
     DOC
   end
 

@@ -1,5 +1,6 @@
 class AirQualityIndex::AQI_Information
 
+  #prints general AQI information
   def call
 
     puts ''
@@ -17,7 +18,7 @@ class AirQualityIndex::AQI_Information
     puts ''
     puts '"Hazardous" AQI greater than 300. This would trigger a health warnings of emergency conditions. The entire population is more likely to be affected.'
     puts ''
-    
+
   end
 
 end
