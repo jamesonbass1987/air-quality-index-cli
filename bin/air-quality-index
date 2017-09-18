@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
 
-require './lib/environment'
+require './lib/air_quality_index'
 
 AirQualityIndex::CLI.new.call
