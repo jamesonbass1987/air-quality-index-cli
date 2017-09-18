@@ -39,10 +39,18 @@ class AirQualityIndex::CLI
       #based on user input, call appropriate class method
       case user_input
       when '1'
-        AirQualityIndex::LocalAQI.new.call_from_zip_code
+        if self.time_check
+          puts data_unavailable_message
+        else
+          AirQualityIndex::LocalAQI.new.call_from_zip_code
+        end
         self.return_message
       when '2'
-        AirQualityIndex::NationwideAQI.new.call
+        if self.time_check
+          puts data_unavailable_message
+        else
+          AirQualityIndex::NationwideAQI.new.call
+        end
         self.return_message
       when '3'
         AirQualityIndex::AQI_Information.new.call
@@ -62,6 +70,18 @@ class AirQualityIndex::CLI
   def return_message
     puts "Type 'return' to go back to previous menu, or type 'exit'."
     puts ""
+  end
+
+  #check to see if current time is between midnight and 4am EST (Data Unavailable During This Time)
+  def time_check
+    time =  Time.now.getlocal('-04:00')
+    time.hour.between?(0,4)
+  end
+
+  #data unavailability message if hours between midnight and 4am EST
+  def data_unavailable_message
+    puts ''
+    puts 'Updates for current conditions are not available between 12:00 a.m. and 4:00a.m. EST.'
   end
 
 end

@@ -15,16 +15,6 @@ class AirQualityIndex::LocalAQI
     self.aqi_info_validation_return(self.doc)
   end
 
-  #instantiates new instance from the Nationwide rankings based on user selection
-  def call_from_ranking(link)
-
-    #call scraper class method to access html of page based ranking
-    @doc = AirQualityIndex::Scraper.new.nationwide_scraper_more_info(link)
-
-    #return aqi information for ranked city
-    self.aqi_info_validation_return(self.doc)
-  end
-
   # grab zip code from user for local aqi instance
   def zip_code_grabber
 
@@ -60,8 +50,20 @@ class AirQualityIndex::LocalAQI
     end
   end
 
+  #instantiates new instance from the Nationwide rankings based on user selection
+  def call_from_ranking(ranked_city)
+
+    site_link = 'https://airnow.gov/'
+
+    #call scraper class method to access html of page based ranking
+    @doc = AirQualityIndex::Scraper.new.nationwide_scraper_more_info(site_link.concat(ranked_city.link))
+
+    #return aqi information for ranked city
+    self.aqi_info_validation_return(self.doc, ranked_city)
+  end
+
   #check to see if zip code page information is available based on scraped web site data, otherwise proceed with aqi info pull
-  def aqi_info_validation_return(html)
+  def aqi_info_validation_return(html, city = nil)
 
     page_message = html.search("h2").text.strip
 
@@ -70,27 +72,24 @@ class AirQualityIndex::LocalAQI
       puts page_message
     else
       #store information as local instance variables
-      self.local_aqi_index
+      self.local_aqi_index(city)
       #return aqi index information
       self.local_aqi_return
     end
   end
 
-  #grabs timestamp of aqi measurement
-  def timestamp
-    timestamp = self.doc.search("td.AQDataSectionTitle").css("small").text.split(" ")
-    timestamp[0].capitalize!
-    timestamp = timestamp.join(" ")
-    timestamp
-  end
-
   #assign scraped information to instance variables
-  def local_aqi_index
+  def local_aqi_index(ranked_city)
 
     #Store 'Data Unavailable Message' as variable. Each method below checks for a nil return and sets message if found.
     unavailable_msg = "Data Not Currently Available"
 
-    @city = AirQualityIndex::City.new
+    #If a ranked city instance is supplied, set @city to this instance, otherwise, create a new instance
+     if ranked_city.nil?
+       @city = AirQualityIndex::City.new
+     else
+       @city = ranked_city
+     end
 
     #store location information
     self.city.location_city = self.doc.search(".ActiveCity").text.strip
@@ -119,8 +118,23 @@ class AirQualityIndex::LocalAQI
     self.doc.search("td.HealthMessage")[2].nil?? self.city.tomorrow_aqi_msg = unavailable_msg : self.city.tomorrow_aqi_msg = self.doc.search("td.HealthMessage")[2].text.strip[/(?<=Health Message: ).*/]
     self.doc.search("td.AQDataPollDetails")[9].nil?? self.city.tomorrow_ozone = unavailable_msg : self.city.tomorrow_ozone = self.doc.search("td.AQDataPollDetails")[9].text.strip
 
+    binding.pry
+
     #return self
     self
+  end
+
+  #grabs timestamp of aqi measurement
+  def timestamp
+    timestamp = self.doc.search("td.AQDataSectionTitle").css("small").text.split(" ")
+    binding.pry
+    if timestamp != []
+      timestamp[0].capitalize!
+      timestamp = timestamp.join(" ")
+    else
+      timestamp = 'Time Unavailable'
+    end
+    timestamp
   end
 
   #return output message with scraped information
