@@ -50,7 +50,7 @@ class AirQualityIndex::LocalAQI
     end
   end
 
-  #instantiates new instance from the Nationwide rankings based on user selection
+  #passes ranked_city instance from the Nationwide rankings based on user selection
   def call_from_ranking(ranked_city)
 
     site_link = 'https://airnow.gov/'
@@ -62,7 +62,7 @@ class AirQualityIndex::LocalAQI
     self.aqi_info_validation_return(self.doc, ranked_city)
   end
 
-  #check to see if zip code page information is available based on scraped web site data, otherwise proceed with aqi info pull
+  #check to see if page information is available based on scraped web site data (based on zip), otherwise proceed with aqi info pull
   def aqi_info_validation_return(html, city = nil)
 
     page_message = html.search("h2").text.strip
@@ -79,13 +79,13 @@ class AirQualityIndex::LocalAQI
   end
 
   #assign scraped information to instance variables
-  def local_aqi_index(ranked_city)
+  def local_aqi_index(city)
 
     #Store 'Data Unavailable Message' as variable. Each method below checks for a nil return and sets message if found.
     unavailable_msg = "Data Not Currently Available"
 
-    #If a ranked city instance is supplied, set @city to this instance, otherwise, create a new instance
-     if ranked_city.nil?
+    #If a ranked city instance is supplied, set @city to this instance, otherwise, create a new city instance
+     if city.nil?
        @city = AirQualityIndex::City.new
      else
        @city = ranked_city
@@ -118,13 +118,11 @@ class AirQualityIndex::LocalAQI
     self.doc.search("td.HealthMessage")[2].nil?? self.city.tomorrow_aqi_msg = unavailable_msg : self.city.tomorrow_aqi_msg = self.doc.search("td.HealthMessage")[2].text.strip[/(?<=Health Message: ).*/]
     self.doc.search("td.AQDataPollDetails")[9].nil?? self.city.tomorrow_ozone = unavailable_msg : self.city.tomorrow_ozone = self.doc.search("td.AQDataPollDetails")[9].text.strip
 
-    binding.pry
-
     #return self
     self
   end
 
-  #grabs timestamp of aqi measurement
+  #grabs timestamp of aqi measurement, if none available, sets to "Time Unavailable" and returns
   def timestamp
     timestamp = self.doc.search("td.AQDataSectionTitle").css("small").text.split(" ")
     binding.pry

@@ -97,7 +97,7 @@ class AirQualityIndex::NationwideAQI
     end
   end
 
-  #asks user if they would like additional information on any of the ranked cities, if so, pulls individual ranking information via local_aqi method call
+  #asks user if they would like additional information on any of the ranked cities, if so, passes selected city instance to the local_aqi method call and then returns instance
   def get_more_info?
 
     puts "Would you like local information for any of the cities listed? Please enter a numerical value 1-5, type 'exit' to end program, or type any other key to return to previous menu."
