@@ -125,12 +125,11 @@ class AirQualityIndex::LocalAQI
   #grabs timestamp of aqi measurement, if none available, sets to "Time Unavailable" and returns
   def timestamp
     timestamp = self.doc.search("td.AQDataSectionTitle").css("small").text.split(" ")
-    binding.pry
     if timestamp != []
       timestamp[0].capitalize!
       timestamp = timestamp.join(" ")
     else
-      timestamp = 'Time Unavailable'
+      timestamp = 'Time Captured Unavailable'
     end
     timestamp
   end
