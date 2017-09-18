@@ -88,7 +88,7 @@ class AirQualityIndex::LocalAQI
      if city.nil?
        @city = AirQualityIndex::City.new
      else
-       @city = ranked_city
+       @city = city
      end
 
     #store location information
@@ -97,6 +97,7 @@ class AirQualityIndex::LocalAQI
 
     #store aqi index
     self.doc.at('.TblInvisible').css('tr td').children[1].nil?? self.city.current_aqi_index = unavailable_msg : self.city.current_aqi_index = self.doc.at('.TblInvisible').css('tr td').children[1].text.strip
+    self.doc.search("td.AQDataLg").nil?? self.city.current_aqi_msg = unavailable_msg : self.city.current_aqi_msg = self.doc.search("td.AQDataLg")[0].text.strip
     self.doc.search("td.HealthMessage")[0].nil?? self.city.current_health_msg = unavailable_msg : self.city.current_health_msg = self.doc.search("td.HealthMessage")[0].text.strip[/(?<=Health Message: ).*/]
 
     #store current aqi/ozone data
@@ -141,7 +142,7 @@ class AirQualityIndex::LocalAQI
 
     Current Conditions in #{self.city.location_city}, #{self.city.location_state} (#{self.city.current_aqi_timestamp}):
 
-    AQI: #{self.city.current_aqi_index}
+    AQI: #{self.city.current_aqi_index} (#{self.city.current_aqi_msg})
     Health Message: #{self.city.current_health_msg}
 
     Ozone: #{self.city.current_ozone} (#{self.city.current_ozone_msg})
