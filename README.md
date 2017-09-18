@@ -20,7 +20,7 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Install and enter AirQualityIndex::CLI.new.call to start a new instance of of the CLI.
 
 ## Development
 
