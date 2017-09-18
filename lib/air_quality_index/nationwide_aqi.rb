@@ -1,6 +1,6 @@
 class AirQualityIndex::NationwideAQI
 
-  attr_accessor :todays_date, :national_aqi, :first_city, :first_index, :first_message, :second_city, :second_index, :second_message, :third_city, :third_index, :third_message, :fourth_city, :fourth_index, :fourth_message, :fifth_city, :fifth_index, :fifth_message, :html, :first_link, :second_link, :third_link, :fourth_link, :fifth_link
+  attr_accessor :todays_date, :national_aqi, :first_city, :second_city, :third_city, :fourth_city, :fifth_city, :html
 
   #instantiates a new pull from AirNow.gov for the top 5 current rankings on air pollution
   def call
@@ -15,11 +15,11 @@ class AirQualityIndex::NationwideAQI
     puts "Nationwide AQI Rankings for #{self.todays_date.month}/#{self.todays_date.day}/#{self.todays_date.year}"
     puts ""
     puts <<-DOC
-    1. #{self.first_city} - #{self.first_index} (#{self.first_message})
-    2. #{self.second_city} - #{self.second_index} (#{self.second_message})
-    3. #{self.third_city} - #{self.third_index} (#{self.third_message})
-    4. #{self.fourth_city} - #{self.fourth_index} (#{self.fourth_message})
-    5. #{self.fifth_city} - #{self.fifth_index} (#{self.fifth_message})
+    1. #{self.first_city.name} - #{self.first_city.index} (#{self.first_city.message})
+    2. #{self.second_city.name} - #{self.second_city.index} (#{self.second_city.message})
+    3. #{self.third_city.name} - #{self.third_city.index} (#{self.third_city.message})
+    4. #{self.fourth_city.name} - #{self.fourth_city.index} (#{self.fourth_city.message})
+    5. #{self.fifth_city.name} - #{self.fifth_city.index} (#{self.fifth_city.message})
     DOC
   end
 
@@ -34,35 +34,45 @@ class AirQualityIndex::NationwideAQI
     #scrape page for top ranking cities
     @html = AirQualityIndex::Scraper.new.nationwide_aqi_scraper
 
-    #store first rank data
-    self.first_city = self.html.search("a.NtnlSummaryCity")[0].text.strip
-    self.first_index = self.html.search("div.TabbedPanelsContent").children.css("tr td")[1].children.text.strip
-    self.first_message = aqi_message_set(self.first_index)
-    self.first_link = html.search("a.NtnlSummaryCity")[0]['href']
+    #create and store first rank data
+    @first_city = AirQualityIndex::RankedCity.new
+
+    self.first_city.name = self.html.search("a.NtnlSummaryCity")[0].text.strip
+    self.first_city.index = self.html.search("div.TabbedPanelsContent").children.css("tr td")[1].children.text.strip
+    self.first_city.message = aqi_message_set(self.first_city.index)
+    self.first_city.link = html.search("a.NtnlSummaryCity")[0]['href']
 
     #store second rank data
-    self.second_city = self.html.search("a.NtnlSummaryCity")[1].text.strip
-    self.second_index = self.html.search("div.TabbedPanelsContent").children.css("tr td")[6].children.text.strip
-    self.second_message = aqi_message_set(self.second_index)
-    self.second_link = html.search("a.NtnlSummaryCity")[1]['href']
+    @second_city = AirQualityIndex::RankedCity.new
+
+    self.second_city.name = self.html.search("a.NtnlSummaryCity")[1].text.strip
+    self.second_city.index = self.html.search("div.TabbedPanelsContent").children.css("tr td")[6].children.text.strip
+    self.second_city.message = aqi_message_set(self.second_city.index)
+    self.second_city.link = html.search("a.NtnlSummaryCity")[1]['href']
 
     #store third rank data
-    self.third_city = self.html.search("a.NtnlSummaryCity")[2].text.strip
-    self.third_index = self.html.search("div.TabbedPanelsContent").children.css("tr td")[11].children.text.strip
-    self.third_message = aqi_message_set(self.third_index)
-    self.third_link = html.search("a.NtnlSummaryCity")[2]['href']
+    @third_city = AirQualityIndex::RankedCity.new
+
+    self.third_city.name = self.html.search("a.NtnlSummaryCity")[2].text.strip
+    self.third_city.index = self.html.search("div.TabbedPanelsContent").children.css("tr td")[11].children.text.strip
+    self.third_city.message = aqi_message_set(self.third_city.index)
+    self.third_city.link = html.search("a.NtnlSummaryCity")[2]['href']
 
     #store fourth rank data
-    self.fourth_city = self.html.search("a.NtnlSummaryCity")[3].text.strip
-    self.fourth_index = self.html.search("div.TabbedPanelsContent").children.css("tr td")[16].children.text.strip
-    self.fourth_message = aqi_message_set(self.fourth_index)
-    self.fourth_link = html.search("a.NtnlSummaryCity")[3]['href']
+    @fourth_city = AirQualityIndex::RankedCity.new
+
+    self.fourth_city.name = self.html.search("a.NtnlSummaryCity")[3].text.strip
+    self.fourth_city.index = self.html.search("div.TabbedPanelsContent").children.css("tr td")[16].children.text.strip
+    self.fourth_city.message = aqi_message_set(self.fourth_city.index)
+    self.fourth_city.link = html.search("a.NtnlSummaryCity")[3]['href']
 
     #store fifth rank data
-    self.fifth_city = self.html.search("a.NtnlSummaryCity")[4].text.strip
-    self.fifth_index = self.html.search("div.TabbedPanelsContent").children.css("tr td")[21].children.text.strip
-    self.fifth_message = aqi_message_set(self.fifth_index)
-    self.fifth_link = html.search("a.NtnlSummaryCity")[4]['href']
+    @fifth_city = AirQualityIndex::RankedCity.new
+
+    self.fifth_city.name = self.html.search("a.NtnlSummaryCity")[4].text.strip
+    self.fifth_city.index = self.html.search("div.TabbedPanelsContent").children.css("tr td")[21].children.text.strip
+    self.fifth_city.message = aqi_message_set(self.fifth_city.index)
+    self.fifth_city.link = html.search("a.NtnlSummaryCity")[4]['href']
 
   end
 
@@ -101,15 +111,15 @@ class AirQualityIndex::NationwideAQI
     #depending on user input, sets new local aqi instance to city_info variable
     case user_input
       when '1'
-        city_info = AirQualityIndex::LocalAQI.new.call_from_ranking(link.concat(self.first_link))
+        city_info = AirQualityIndex::LocalAQI.new.call_from_ranking(link.concat(self.first_city.link))
       when '2'
-        city_info = AirQualityIndex::LocalAQI.new.call_from_ranking(link.concat(self.second_link))
+        city_info = AirQualityIndex::LocalAQI.new.call_from_ranking(link.concat(self.second_city.link))
       when '3'
-        city_info = AirQualityIndex::LocalAQI.new.call_from_ranking(link.concat(self.third_link))
+        city_info = AirQualityIndex::LocalAQI.new.call_from_ranking(link.concat(self.third_city.link))
       when '4'
-        city_info = AirQualityIndex::LocalAQI.new.call_from_ranking(link.concat(self.fourth_link))
+        city_info = AirQualityIndex::LocalAQI.new.call_from_ranking(link.concat(self.fourth_city.link))
       when '5'
-        city_info = AirQualityIndex::LocalAQI.new.call_from_ranking(link.concat(self.fifth_link))
+        city_info = AirQualityIndex::LocalAQI.new.call_from_ranking(link.concat(self.fifth_city.link))
       when 'exit'
         exit!
       end
