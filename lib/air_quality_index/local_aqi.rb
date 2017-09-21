@@ -34,7 +34,6 @@ class AirQualityIndex::LocalAQI
           puts "I'm sorry. That entry was invalid. Please enter a valid 5 digit zip code."
           puts ""
       end
-
     end
 
     #return zip_code
@@ -116,18 +115,7 @@ class AirQualityIndex::LocalAQI
     self
   end
 
-  #grabs timestamp of aqi measurement, if none available, sets to "Time Unavailable" and returns
-  def timestamp
-    timestamp = self.doc.search("td.AQDataSectionTitle").css("small").text.split(" ")
-    if timestamp != []
-      timestamp[0].capitalize!
-      timestamp = timestamp.join(" ")
-    else
-      timestamp = 'Time Captured Unavailable'
-    end
-    timestamp
-  end
-
+  #Checks attribute passed in checking for nil, if nil, appends "Information Not Available" message, else, sets parsed/scraped data to attribute
   def set_msg_or_attribute(attribute, data)
 
     #Store 'Data Unavailable Message' as variable. Each method below checks for a nil return and sets message if found.
@@ -145,7 +133,18 @@ class AirQualityIndex::LocalAQI
     else
       self.city.send("#{attribute}=", data.text.strip)
     end
+  end
 
+  #grabs timestamp of aqi measurement, if none available, sets to "Time Unavailable" and returns
+  def timestamp
+    timestamp = self.doc.search("td.AQDataSectionTitle").css("small").text.split(" ")
+    if timestamp != []
+      timestamp[0].capitalize!
+      timestamp = timestamp.join(" ")
+    else
+      timestamp = 'Time Captured Unavailable'
+    end
+    timestamp
   end
 
   #return output message with scraped information
