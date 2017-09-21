@@ -81,43 +81,36 @@ class AirQualityIndex::LocalAQI
   #assign scraped information to instance variables
   def local_aqi_index(city)
 
-    #Store 'Data Unavailable Message' as variable. Each method below checks for a nil return and sets message if found.
-    unavailable_msg = "Data Not Currently Available"
-
     #If a ranked city instance is supplied, set @city to this instance, otherwise, create a new city instance
-     if city.nil?
-       @city = AirQualityIndex::City.new
-     else
-       @city = city
-     end
+    city.nil?? @city = AirQualityIndex::City.new : @city = city
 
     #store location information
     self.city.location_city = self.doc.search(".ActiveCity").text.strip
     self.city.location_state = self.doc.search("a.Breadcrumb")[1].text.strip
 
     #store aqi index
-    self.doc.at('.TblInvisible').css('tr td').children[1].nil?? self.city.current_aqi_index = unavailable_msg : self.city.current_aqi_index = self.doc.at('.TblInvisible').css('tr td').children[1].text.strip
-    self.doc.search("td.AQDataLg").nil?? self.city.current_aqi_msg = unavailable_msg : self.city.current_aqi_msg = self.doc.search("td.AQDataLg")[0].text.strip
-    self.doc.search("td.HealthMessage")[0].nil?? self.city.current_health_msg = unavailable_msg : self.city.current_health_msg = self.doc.search("td.HealthMessage")[0].text.strip[/(?<=Health Message: ).*/]
+    set_msg_or_attribute('current_aqi_index', self.doc.at('.TblInvisible').css('tr td').children[1])
+    set_msg_or_attribute('current_aqi_msg', self.doc.search("td.AQDataLg")[0])
+    set_msg_or_attribute('current_health_msg', self.doc.search("td.HealthMessage")[0])
 
     #store current aqi/ozone data
-    self.doc.search("table")[14].children.css("td")[4].nil?? self.city.current_pm = unavailable_msg : self.city.current_pm = self.doc.search("table")[14].children.css("td")[4].text.strip
-    self.doc.search("td.AQDataPollDetails")[3].nil?? self.city.current_pm_msg = unavailable_msg : self.city.current_pm_msg = self.doc.search("td.AQDataPollDetails")[3].text.strip
-    self.doc.search("table")[14].children.css("td")[1].nil?? self.city.current_ozone = unavailable_msg : self.city.current_ozone =  self.doc.search("table")[14].children.css("td")[1].text.strip
-    self.doc.search("td.AQDataPollDetails")[1].nil?? self.city.current_ozone_msg = unavailable_msg : self.city.current_ozone_msg = self.doc.search("td.AQDataPollDetails")[1].text.strip
+    set_msg_or_attribute('current_pm', self.doc.search("table")[14].children.css("td")[4])
+    set_msg_or_attribute('current_pm_msg', self.doc.search("td.AQDataPollDetails")[3])
+    set_msg_or_attribute('current_ozone', self.doc.search("table")[14].children.css("td")[1])
+    set_msg_or_attribute('current_ozone_msg', self.doc.search("td.AQDataPollDetails")[1])
 
     #Extract time from site
     self.city.current_aqi_timestamp = self.timestamp
 
     #store todays forecast data
-    self.doc.search("td.AQDataPollDetails")[7].nil?? self.city.today_aqi = unavailable_msg : self.city.today_aqi = self.doc.search("td.AQDataPollDetails")[7].text.strip
-    self.doc.search("td.HealthMessage")[1].nil?? self.city.today_aqi_msg = unavailable_msg : self.city.today_aqi_msg = self.doc.search("td.HealthMessage")[1].text.strip[/(?<=Health Message: ).*/]
-    self.doc.search("td.AQDataPollDetails")[5].nil?? self.city.today_ozone = unavailable_msg : self.city.today_ozone = self.doc.search("td.AQDataPollDetails")[5].text.strip
+    set_msg_or_attribute('today_aqi', self.doc.search("td.AQDataPollDetails")[7])
+    set_msg_or_attribute('today_health_msg', self.doc.search("td.HealthMessage")[1])
+    set_msg_or_attribute('today_ozone', self.doc.search("td.AQDataPollDetails")[5])
 
     #store tomorrows forecast data
-    self.doc.search("td.AQDataPollDetails")[11].nil?? self.city.tomorrow_aqi = unavailable_msg : self.city.tomorrow_aqi = self.doc.search("td.AQDataPollDetails")[11].text.strip
-    self.doc.search("td.HealthMessage")[2].nil?? self.city.tomorrow_aqi_msg = unavailable_msg : self.city.tomorrow_aqi_msg = self.doc.search("td.HealthMessage")[2].text.strip[/(?<=Health Message: ).*/]
-    self.doc.search("td.AQDataPollDetails")[9].nil?? self.city.tomorrow_ozone = unavailable_msg : self.city.tomorrow_ozone = self.doc.search("td.AQDataPollDetails")[9].text.strip
+    set_msg_or_attribute('tomorrow_aqi', self.doc.search("td.AQDataPollDetails")[11])
+    set_msg_or_attribute('tomorrow_health_msg', self.doc.search("td.HealthMessage")[2])
+    set_msg_or_attribute('tomorrow_ozone', self.doc.search("td.AQDataPollDetails")[9])
 
     #return self
     self
@@ -135,6 +128,26 @@ class AirQualityIndex::LocalAQI
     timestamp
   end
 
+  def set_msg_or_attribute(attribute, data)
+
+    #Store 'Data Unavailable Message' as variable. Each method below checks for a nil return and sets message if found.
+    unavailable_msg = "Data Not Currently Available"
+
+    #if data is nil and assessing a health message attribute, concatinate "Health Message" to unavailable msg
+    if data.nil? && attribute.include?("health_msg")
+      self.city.send("#{attribute}=", "Health Message: ".concat(unavailable_msg))
+
+    #Else if data is nil and not part of Health Message attribute, set unavailable message to attribute
+    elsif data.nil?
+      self.city.send("#{attribute}=", unavailable_msg)
+
+    #Else data is available, set to attribute
+    else
+      self.city.send("#{attribute}=", data.text.strip)
+    end
+
+  end
+
   #return output message with scraped information
   def local_aqi_return
 
@@ -143,7 +156,7 @@ class AirQualityIndex::LocalAQI
     Current Conditions in #{self.city.location_city}, #{self.city.location_state} (#{self.city.current_aqi_timestamp}):
 
     AQI: #{self.city.current_aqi_index} (#{self.city.current_aqi_msg})
-    Health Message: #{self.city.current_health_msg}
+    #{self.city.current_health_msg}
 
     Ozone: #{self.city.current_ozone} (#{self.city.current_ozone_msg})
     Particles (PM2.5): #{self.city.current_pm} (#{self.city.current_pm_msg})
@@ -152,13 +165,13 @@ class AirQualityIndex::LocalAQI
 
     AQI: #{self.city.today_aqi}
     Ozone: #{self.city.today_ozone}
-    Health Message: #{self.city.today_aqi_msg}
+    #{self.city.today_health_msg}
 
     Tomorrow's Forecast in #{self.city.location_city}, #{self.city.location_state}
 
     AQI: #{self.city.tomorrow_aqi}
     Ozone: #{self.city.tomorrow_ozone}
-    Health Message: #{self.city.tomorrow_aqi_msg}
+    #{self.city.tomorrow_health_msg}
 
     DOC
   end

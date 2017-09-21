@@ -90,10 +90,8 @@ class AirQualityIndex::NationwideAQI
         "Unhealthy"
       when 201..300
         "Very Unhealthy"
-      when 301 - 500
-        "Hazardous"
       else
-        "You are probably too dead to read this from all of the air pollution"
+        "Hazardous"
     end
   end
 
