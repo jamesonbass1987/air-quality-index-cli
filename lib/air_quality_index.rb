@@ -2,7 +2,6 @@ require 'nokogiri'
 require 'open-uri'
 require 'pry'
 
-
 require_relative "./air_quality_index/version"
 require_relative "./air_quality_index/cli"
 require_relative "./air_quality_index/local_aqi"
