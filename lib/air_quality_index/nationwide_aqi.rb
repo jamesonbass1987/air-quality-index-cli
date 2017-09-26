@@ -10,25 +10,6 @@ class AirQualityIndex::NationwideAQI
     self.get_more_info?
   end
 
-  #outputs nationwide ranking information from scraped web data
-  def todays_rankings_output
-    puts ""
-    puts "Nationwide AQI Rankings for #{self.todays_date.month}/#{self.todays_date.day}/#{self.todays_date.year}"
-    puts ""
-    puts <<-DOC
-    1. #{self.first_city.location_name_full} - #{self.first_city.index} (#{self.first_city.message})
-    2. #{self.second_city.location_name_full} - #{self.second_city.index} (#{self.second_city.message})
-    3. #{self.third_city.location_name_full} - #{self.third_city.index} (#{self.third_city.message})
-    4. #{self.fourth_city.location_name_full} - #{self.fourth_city.index} (#{self.fourth_city.message})
-    5. #{self.fifth_city.location_name_full} - #{self.fifth_city.index} (#{self.fifth_city.message})
-    DOC
-  end
-
-  #sets today's date for data output
-  def todays_date
-    @todays_date = Time.new
-  end
-
   #sets instance variables for each piece of ranking data from scraped html
   def get_nationwide_data
 
@@ -77,6 +58,11 @@ class AirQualityIndex::NationwideAQI
 
   end
 
+  #sets today's date for data output
+  def todays_date
+    @todays_date = Time.new
+  end
+
   #set aqi messages based off of aqi index ranking
   def aqi_message_set(index)
     case index.to_i
@@ -93,6 +79,20 @@ class AirQualityIndex::NationwideAQI
       else
         "Hazardous"
     end
+  end
+
+  #outputs nationwide ranking information from scraped web data
+  def todays_rankings_output
+    puts ""
+    puts "Nationwide AQI Rankings for #{self.todays_date.month}/#{self.todays_date.day}/#{self.todays_date.year}"
+    puts ""
+    puts <<-DOC
+    1. #{self.first_city.location_name_full} - #{self.first_city.index} (#{self.first_city.message})
+    2. #{self.second_city.location_name_full} - #{self.second_city.index} (#{self.second_city.message})
+    3. #{self.third_city.location_name_full} - #{self.third_city.index} (#{self.third_city.message})
+    4. #{self.fourth_city.location_name_full} - #{self.fourth_city.index} (#{self.fourth_city.message})
+    5. #{self.fifth_city.location_name_full} - #{self.fifth_city.index} (#{self.fifth_city.message})
+    DOC
   end
 
   #asks user if they would like additional information on any of the ranked cities, if so, passes selected city instance to the local_aqi method call and then returns instance

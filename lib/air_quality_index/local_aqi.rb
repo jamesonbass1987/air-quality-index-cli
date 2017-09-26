@@ -100,16 +100,17 @@ class AirQualityIndex::LocalAQI
 
     #Extract time from site
     self.city.current_aqi_timestamp = self.timestamp
+    self.doc.search("td.AQDataContent")[0].css("tr")[2].text.strip
 
     #store todays forecast data
-    set_msg_or_attribute('today_aqi', self.doc.search("td.AQDataPollDetails")[7])
+    set_msg_or_attribute('today_aqi', self.doc.search("td.AQDataContent")[0].css("td")[3])
+    set_msg_or_attribute('today_aqi_num', self.doc.search("td.AQDataContent")[0].css("tr")[2])
     set_msg_or_attribute('today_health_msg', self.doc.search("td.HealthMessage")[1])
-    set_msg_or_attribute('today_ozone', self.doc.search("td.AQDataPollDetails")[5])
 
     #store tomorrows forecast data
-    set_msg_or_attribute('tomorrow_aqi', self.doc.search("td.AQDataPollDetails")[11])
+    set_msg_or_attribute('tomorrow_aqi', self.doc.search("td.AQDataContent")[1].css("td")[3])
+    set_msg_or_attribute('tomorrow_aqi_num', self.doc.search("td.AQDataContent")[1].css("tr")[2])
     set_msg_or_attribute('tomorrow_health_msg', self.doc.search("td.HealthMessage")[2])
-    set_msg_or_attribute('tomorrow_ozone', self.doc.search("td.AQDataPollDetails")[9])
 
     #return self
     self
@@ -158,18 +159,16 @@ class AirQualityIndex::LocalAQI
     #{self.city.current_health_msg}
 
     Ozone: #{self.city.current_ozone} (#{self.city.current_ozone_msg})
-    Particles (PM2.5): #{self.city.current_pm} (#{self.city.current_pm_msg})
+    Particulate Matter: #{self.city.current_pm} (#{self.city.current_pm_msg})
 
     Today's Forecast in #{self.city.location_city}, #{self.city.location_state}
 
-    AQI: #{self.city.today_aqi}
-    Ozone: #{self.city.today_ozone}
+    AQI: #{self.city.today_aqi_num} (#{self.city.today_aqi})
     #{self.city.today_health_msg}
 
     Tomorrow's Forecast in #{self.city.location_city}, #{self.city.location_state}
 
-    AQI: #{self.city.tomorrow_aqi}
-    Ozone: #{self.city.tomorrow_ozone}
+    AQI: #{self.city.tomorrow_aqi_num} (#{self.city.tomorrow_aqi})
     #{self.city.tomorrow_health_msg}
 
     DOC
