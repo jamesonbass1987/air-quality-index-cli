@@ -68,7 +68,7 @@ class AirQualityIndex::CLI
 
   #return message displayed after each menu selection call
   def return_message
-    puts "Type 'return' to go back to previous menu, or type 'exit'."
+    puts "Type 'return' to go back to the main menu, or type 'exit'."
     puts ""
   end
 

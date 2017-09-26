@@ -98,28 +98,39 @@ class AirQualityIndex::NationwideAQI
   #asks user if they would like additional information on any of the ranked cities, if so, passes selected city instance to the local_aqi method call and then returns instance
   def get_more_info?
 
-    puts "Would you like local information for any of the cities listed? Please enter a numerical value 1-5, type 'exit' to end program, or type any other key to return to previous menu."
+    puts "Would you like local information for any of the cities listed? Please enter a numerical value 1-5, type 'exit' to end program, or type return to go to the main menu."
     puts ""
 
     @selected_city = nil
 
-    #gets user input
-    user_input = gets.strip.downcase
+    user_input = nil
 
-    #depending on user input, sets new local aqi instance to city_info variable
-    case user_input
-      when '1'
-        self.selected_city = AirQualityIndex::LocalAQI.new.call_from_ranking(self.first_city)
-      when '2'
-        self.selected_city = AirQualityIndex::LocalAQI.new.call_from_ranking(self.second_city)
-      when '3'
-        self.selected_city = AirQualityIndex::LocalAQI.new.call_from_ranking(self.third_city)
-      when '4'
-        self.selected_city = AirQualityIndex::LocalAQI.new.call_from_ranking(self.fourth_city)
-      when '5'
-        self.selected_city = AirQualityIndex::LocalAQI.new.call_from_ranking(self.fifth_city)
-      when 'exit'
-        exit!
+    #perform until user types a correct response from the available options
+    while !['1','2','3','4','5','exit','return'].include?(user_input)
+
+      #gets user input
+      user_input = gets.strip.downcase
+
+      #depending on user input, sets new local aqi instance to city_info variable
+      case user_input
+        when '1'
+          self.selected_city = AirQualityIndex::LocalAQI.new.call_from_ranking(self.first_city)
+        when '2'
+          self.selected_city = AirQualityIndex::LocalAQI.new.call_from_ranking(self.second_city)
+        when '3'
+          self.selected_city = AirQualityIndex::LocalAQI.new.call_from_ranking(self.third_city)
+        when '4'
+          self.selected_city = AirQualityIndex::LocalAQI.new.call_from_ranking(self.fourth_city)
+        when '5'
+          self.selected_city = AirQualityIndex::LocalAQI.new.call_from_ranking(self.fifth_city)
+        when 'exit'
+          exit!
+        when 'return'
+          AirQualityIndex::CLI.new.call
+        else
+          puts "I'm sorry. I didn't quite understand what you meant. Please enter a numerical value 1-5, type 'exit' to end program, or type return to go to the main menu."
+        end
+
       end
 
     #return city_info if user selected one
